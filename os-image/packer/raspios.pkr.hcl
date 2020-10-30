@@ -32,4 +32,24 @@ build {
   sources = [
     "source.arm-image.raspios"
   ]
+
+  # Set WiFi credentials.
+  provisioner "shell" {
+    inline = [
+      "echo country=FR >> /etc/wpa_supplicant/wpa_supplicant.conf",
+      "wpa_passphrase \"${var.wifi_ssid}\" \"${var.wifi_password}\" | sed -e 's/#.*$//' -e '/^$/d' >> /etc/wpa_supplicant/wpa_supplicant.conf",
+    ]
+  }
+
+  # Enable WiFi on boot.
+  # To do this, create a service that unblocks WiFi after the OS has booted.
+  provisioner "file" {
+    source      = "/vagrant/files/rfkill-unblock-wifi.service"
+    destination = "/etc/systemd/system/rfkill-unblock-wifi.service"
+  }
+  provisioner "shell" {
+    inline = [
+      "systemctl enable rfkill-unblock-wifi",
+    ]
+  }
 }
