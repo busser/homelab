@@ -13,4 +13,16 @@ Vagrant.configure("2") do |config|
         type: "shell",
         :path => "scripts/setup-build-env.sh",
         privileged: false
+
+    # This provisioning step builds the OS image.
+    config.vm.provision "build-image",
+        type: "shell",
+        :path => "scripts/build-image.sh",
+        privileged: false,
+        env: {
+            "WIFI_SSID"     => ENV["WIFI_SSID"],
+            "WIFI_PASSWORD" => ENV["WIFI_PASSWORD"],
+            "PI_HOSTNAME"   => ENV["PI_HOSTNAME"],
+            "PI_USERNAME"   => ENV["PI_USERNAME"],
+        }
 end
