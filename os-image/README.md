@@ -50,3 +50,29 @@ IMAGE=pi0.img # This may be different for you.
 
 sudo dd if="${IMAGE}" of="${DEVICE}" bs=1m
 ```
+
+### Boot & Connect
+
+Once the Raspberry Pi has booted, it should automatically connect to your WiFi
+network. Once you have obtained its IP adress or DNS name (eg. from your
+router), connect to it via SSH:
+
+```bash
+ssh 12.34.56.78
+```
+
+I have set up my home router to forward connections to my Raspberry Pi's SSH
+port. I created a `.ssh/config.d/homelab` file containing this:
+
+```
+Host pi0.homelab
+  ForwardAgent yes
+  HostName homelab.busser.dev
+  Port 22000
+```
+
+This configuration allows me to connect to the Pi from my PC with this command:
+
+```bash
+ssh pi0.homelab
+```
