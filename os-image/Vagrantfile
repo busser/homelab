@@ -1,0 +1,10 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+    # The OS image is built inside an Ubuntu VM.
+    config.vm.box = "bento/ubuntu-20.04"
+
+    # The /vagrant directory is used to sync files between the VM and the host.
+    config.vm.synced_folder "./", "/vagrant", disabled: false
+end
