@@ -52,4 +52,46 @@ build {
       "systemctl enable rfkill-unblock-wifi",
     ]
   }
+  # Create a username to log in as.
+  # This user will have password-less sudoer capabilities.
+  provisioner "shell" {
+    inline = [
+      "useradd --create-home --groups=sudo ${var.pi_username}",
+      "echo \"${var.pi_username} ALL=(ALL) NOPASSWD: ALL\" > /etc/sudoers.d/010_${var.pi_username}-nopasswd"
+    ]
+  }
+
+  # Upload public keys for SSH authentication.
+  provisioner "shell" {
+    inline = [
+      "mkdir -p /home/${var.pi_username}/.ssh",
+      "chmod 700 /home/${var.pi_username}/.ssh",
+    ]
+  }
+  provisioner "file" {
+    source      = "/vagrant/files/authorized_keys"
+    destination = "/home/${var.pi_username}/.ssh/authorized_keys"
+  }
+  provisioner "shell" {
+    inline = [
+      "chmod 600 /home/${var.pi_username}/.ssh/authorized_keys",
+      "chown -R ${var.pi_username}:${var.pi_username} /home/${var.pi_username}"
+    ]
+  }
+
+  # Disable password authentication, for enhanced security.
+  provisioner "shell" {
+    inline = [
+      "sed '/PasswordAuthentication/d' -i /etc/ssh/sshd_config",
+      "echo >> /etc/ssh/sshd_config",
+      "echo 'PasswordAuthentication no' >> /etc/ssh/sshd_config",
+    ]
+  }
+
+  # Enable SSH.
+  provisioner "shell" {
+    inline = [
+      "touch /boot/ssh",
+    ]
+  }
 }
