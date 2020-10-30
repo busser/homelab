@@ -7,4 +7,10 @@ Vagrant.configure("2") do |config|
 
     # The /vagrant directory is used to sync files between the VM and the host.
     config.vm.synced_folder "./", "/vagrant", disabled: false
+
+    # This provisioning step sets up the build environment.
+    config.vm.provision "setup-build-env",
+        type: "shell",
+        :path => "scripts/setup-build-env.sh",
+        privileged: false
 end
