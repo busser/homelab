@@ -94,4 +94,11 @@ build {
       "touch /boot/ssh",
     ]
   }
+  # Set the Pi's hostname.
+  provisioner "shell" {
+    inline = [
+      "sed -i 's/raspberrypi/${var.pi_hostname}/' /etc/hosts",
+      "echo '${var.pi_hostname}' > /etc/hostname"
+    ]
+  }
 }
