@@ -7,10 +7,11 @@ help: Makefile
 
 ## build: Build the OS image for a Raspberry Pi
 .PHONY: build
-build: export WIFI_SSID = $(shell pass wifi/ssid)
-build: export WIFI_PASSWORD = $(shell pass wifi/password)
 build: export PI_HOSTNAME ?= raspberrypi
 build: export PI_USERNAME ?= $(shell whoami)
+build: export AUTHORIZED_KEYS_B64 = $(shell pass ssh/public-key | base64)
+build: export WIFI_PASSWORD = $(shell pass wifi/password)
+build: export WIFI_SSID = $(shell pass wifi/ssid)
 build:
 	vagrant up --provision-with=setup-build-env,build-image
 

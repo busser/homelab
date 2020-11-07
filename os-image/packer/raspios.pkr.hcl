@@ -1,5 +1,16 @@
-# The SSID (ie. name) of the WiFi network the Pi will connect to.
-variable "wifi_ssid" {
+# The hostname the Pi will have.
+variable "pi_hostname" {
+  type    = string
+  default = "raspberrypi"
+}
+
+# The hostname the Pi will have.
+variable "pi_username" {
+  type = string
+}
+
+# Bsae64-encoded list of authorized SSH keys.
+variable "authorized_keys_b64" {
   type = string
 }
 
@@ -9,14 +20,8 @@ variable "wifi_password" {
   sensitive = true
 }
 
-# The hostname the Pi will have.
-variable "pi_hostname" {
-  type    = string
-  default = "raspberrypi"
-}
-
-# The hostname the Pi will have.
-variable "pi_username" {
+# The SSID (ie. name) of the WiFi network the Pi will connect to.
+variable "wifi_ssid" {
   type = string
 }
 
@@ -66,14 +71,7 @@ build {
     inline = [
       "mkdir -p /home/${var.pi_username}/.ssh",
       "chmod 700 /home/${var.pi_username}/.ssh",
-    ]
-  }
-  provisioner "file" {
-    source      = "/vagrant/files/authorized_keys"
-    destination = "/home/${var.pi_username}/.ssh/authorized_keys"
-  }
-  provisioner "shell" {
-    inline = [
+      "echo \"${var.authorized_keys_b64}\" | base64 -d > /home/${var.pi_username}/.ssh/authorized_keys",
       "chmod 600 /home/${var.pi_username}/.ssh/authorized_keys",
       "chown -R ${var.pi_username}:${var.pi_username} /home/${var.pi_username}"
     ]
