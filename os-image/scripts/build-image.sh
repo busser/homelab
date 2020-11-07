@@ -6,13 +6,12 @@ set -e
 echo "🏗  Building image..."
 trap 'echo "🛑 Failed to build image."' ERR
 
-: ${WIFI_SSID:?"You must provide a WiFi network to configure."}
-: ${WIFI_PASSWORD:?"You must provide the WiFi network's password."}
-: ${PI_HOSTNAME:?"You must provide a hostname for your Raspberry Pi."}
-: ${PI_USERNAME:?"You must provide a username to create and configure."}
+: "${WIFI_SSID:?"You must provide a WiFi network to configure."}"
+: "${WIFI_PASSWORD:?"You must provide the WiFi network's password."}"
+: "${PI_HOSTNAME:?"You must provide a hostname for your Raspberry Pi."}"
+: "${PI_USERNAME:?"You must provide a username to create and configure."}"
 
 # Run Packer.
-PACKER_VERSION="1.6.4"
 echo "  ⏳ Running Packer..."
 (
   cd /vagrant

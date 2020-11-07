@@ -24,10 +24,10 @@ GO_VERSION="1.15.3"
 echo "  🐹 Installing Go ${GO_VERSION}..."
 (
   [ -d /usr/local/go ] && exit
-  cd $(mktemp --directory)
+  cd "$(mktemp --directory)"
   wget -q https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz
   sudo tar -C /usr/local -xf go${GO_VERSION}.linux-amd64.tar.gz
-  echo 'PATH=$PATH:/usr/local/go/bin' >> /home/vagrant/.profile
+  echo "PATH=\$PATH:/usr/local/go/bin" >> /home/vagrant/.profile
 )
 export PATH=$PATH:/usr/local/go/bin
 
@@ -36,7 +36,7 @@ PACKER_VERSION="1.6.4"
 echo "  👷‍♀️Installing Packer ${PACKER_VERSION}..."
 (
   [ -f /usr/local/bin/packer ] && exit
-  cd $(mktemp --directory)
+  cd "$(mktemp --directory)"
   wget -q https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip
   unzip -qq -u packer_${PACKER_VERSION}_linux_amd64.zip
   sudo cp packer /usr/local/bin
@@ -47,10 +47,10 @@ echo "  💪 Installing Packer builder for ARM images..."
 PACKER_BUILDER_GIT_COMMIT="586c15a2318be5f18927919bbca74ea16b695dc3"
 (
   sudo [ -f /root/.packer.d/plugins/packer-builder-arm-image ] && exit
-  cd $(mktemp --directory)
+  cd "$(mktemp --directory)"
   git clone -q https://github.com/solo-io/packer-builder-arm-image
   cd packer-builder-arm-image
-  git checkout -q 586c15a2318be5f18927919bbca74ea16b695dc3
+  git checkout -q "${PACKER_BUILDER_GIT_COMMIT}"
   go mod download
   go build
   sudo mkdir -p /root/.packer.d/plugins
